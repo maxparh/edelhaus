@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>EdelHaus</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/login.css' %}">
+</head>
+<body>
+    <div class="header">
+        EdelHaus
+    </div>
+    <div class="main-content">
+        <div class="login-container">
+            <h2>Добро пожаловать</h2>
+            <p>Для начала работы введите логин и пароль, выданные администратором</p>
+            
+            
+
+            
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                <div class="input-containter">
+                    <input type="text" name="username" placeholder="Логин" required><br>
+                <input type="password" name="password" placeholder="Пароль" required><br>
+                </div>
+                {% if error %}
+                    <div class="error-message">{{ error }}</div>
+                {% endif %}
+                <button type="submit">Войти</button>
+            </form>
+
+            
+        </div>
+    </div>
+</body>
+</html>

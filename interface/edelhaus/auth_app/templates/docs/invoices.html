@@ -1,0 +1,32 @@
+<!-- templates/invoices.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>EdelHaus — Накладные</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/invoices.css' %}">
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+    <div class="main-content">
+        <div class="form-panel">
+            <h2>Загрузить накладную</h2>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="order_id" placeholder="Введите номер заказа" required>
+                <button type="submit" class="menu-btn">Скачать накладную</button>
+            </form>
+            <div class="back-exit-btns">
+                <a href="{% url 'home' %}" class="menu-btn back">Назад</a>
+                <a href="{% url 'logout' %}" class="menu-btn exit">Выход</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

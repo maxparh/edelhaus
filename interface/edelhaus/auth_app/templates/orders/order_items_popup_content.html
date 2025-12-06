@@ -1,0 +1,29 @@
+<!-- Только содержимое, без заголовка -->
+{% load custom_filters %}
+{% if items %}
+    <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th>Кол-во</th>
+                <th>Цена</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price|format_currency|default:"—"  }} </td>
+                <td>{{ item.subtotal|format_currency|default:"—" }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin-top: 12px; font-weight: bold;">
+        Общая сумма: {{ total|format_currency|default:"—" }} 
+    </div>
+{% else %}
+    <p style="margin-top: 12px;">В заказе нет товаров.</p>
+{% endif %}

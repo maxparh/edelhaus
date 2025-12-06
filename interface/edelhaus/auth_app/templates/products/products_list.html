@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>EdelHaus — Список товаров</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tables.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/delete-popup.css' %}">
+    {% load custom_filters %}
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+
+    <div class="table-content">
+      <div class="table-panel">
+        {% csrf_token %}
+        <h2 class="table-name">Товары</h2>
+        <div class="table-container">
+          <table border="1" cellpadding="6" cellspacing="0">
+            <tr>
+              <th>Номер в каталоге</th>
+              <th>Название</th>
+              <th>Цена</th>
+              <th>Материал</th>
+              <th>Поставщик</th>
+              <th>Вес (кг)</th>
+              <th>Цвет</th>
+              <th>Дата добавления</th>
+              <th></th>
+              <th></th>
+            </tr>
+            {% for product in page_obj %}
+            <tr>
+                <td>{{ product.product_id }}</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.product_price|format_currency|default:"—" }}</td>
+                <td>{{ product.product_material }}</td>
+                <td>{{ product.supplier.name|default:"—" }}</td>  <!-- ← Имя поставщика -->
+                <td>{{ product.product_weight|floatformat:"0"  }}кг</td>
+                <td>{{ product.product_color }}</td>
+                <td>{{ product.date_added|date:"d.m.Y" }}</td>
+                <td>
+                <a href="{% url 'product_edit' product.product_id %}" class="btn edit">
+                    <img src="../../static/icons/tables/edit.svg" alt="редактировать">
+                </a>
+                </td>
+                <td>
+                <button type="button" class="btn delete"
+                        onclick="openDeletePopup({{ product.product_id }}, '{{ product.product_name|escapejs }}', '{% url 'product_delete' product.product_id %}')">
+                    <img src="{% static 'icons/tables/delete.svg' %}" alt="удалить">
+                </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" style="text-align:center;">Нет товаров</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+        <div class="btns">
+          <div class="back-exit-btns">
+            <a href="{% url 'home' %}" class="btn back">Назад</a>
+            <a href="{% url 'logout' %}" class="btn exit">Выход</a>
+          </div>
+          <div class="nav-btns">
+              <a href="{% url 'product_add' %}" class="btn add-btn">Добавить</a>
+
+              {% if page_obj.has_previous %}
+                  <a href="?page={{ page_obj.previous_page_number }}" class="btn prev-btn">
+                    <img src="../../static/icons/tables/chevron_left.svg" alt="пред">
+                  </a>
+              {% else %}
+                  <span class="btn prev-btn disabled">
+                    <img src="../../static/icons/tables/chevron_left.svg" alt="пред">
+                  </span>
+              {% endif %}
+
+              <span class="page-info">Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}" class="btn next-btn">
+                    <img src="../../static/icons/tables/chevron_right.svg" alt="след.">
+                  </a>
+              {% else %}
+                  <span class="btn next-btn disabled">
+                    <img src="../../static/icons/tables/chevron_right.svg" alt="след.">
+                  </span>
+              {% endif %}
+
+              <a href="#" class="btn search">
+                <img src="../../static/icons/tables/search.svg" alt="Поиск">
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popup удаления -->
+    <div id="deletePopup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Подтвердите удаление</h3>
+            <p id="popupMessage">Вы уверены, что хотите удалить товар <strong id="clientNamePopup"></strong>?</p>
+            <div class="popup-buttons">
+                <button id="confirmDelete" class="btn delete-btn">Удалить</button>
+                <button id="cancelDelete" class="btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../static/scripts/delete-popup.js"></script>
+    <script src="../../static/scripts/delete-on-click.js"></script>
+    <script>
+        // Подмена текста в popup'е под товар
+        document.getElementById('popupMessage').innerHTML = 
+            'Вы уверены, что хотите удалить товар <strong id="clientNamePopup"></strong>?';
+    </script>
+</body>
+</html>

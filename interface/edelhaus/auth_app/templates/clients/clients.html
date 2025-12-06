@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>EdelHaus — Список клиентов</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tables.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/delete-popup.css' %}">
+    {% load custom_filters %}
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+
+    <div class="table-content">
+      <div class="table-panel">
+        {% csrf_token %}
+        <h2 class="table-name">Клиенты</h2>
+        <div class="table-container">
+          <table border="1" cellpadding="6" cellspacing="0">
+            <tr>
+              <th>Номер клиента</th>
+              <th>ФИО</th>
+              <th>Телефон</th>
+              <th>Почта</th>
+              <th>Адрес</th>
+              <th>Уровень программы лояльности</th>
+              <th>Дата регистрации</th>
+              <th></th>
+              <th></th>
+            </tr>
+            {% for client in page_obj %} 
+            <tr>
+                <td>{{ client.client_id }}</td>
+                <td>{{ client.client_name }}</td> 
+                <td>{{ client.client_phone }}</td>
+                <td>{{ client.client_email }}</td>
+                <td>{{ client.client_address }}</td>
+                <td>{{ client.loyalty_lvl }}</td>
+                <td>{{ client.registration_date|date:"d.m.Y" }}</td>
+                <td>
+                  <a href="{% url 'client_edit' client.client_id%}" class="btn edit">
+                    <img src="../../static/icons/tables/edit.svg" alt="">
+                  </a>
+                </td>
+                <td>
+                  <button type="button" class="btn delete"
+                          onclick="openDeletePopup({{ client.client_id }}, '{{ client.client_name|escapejs }}', '{% url 'client_delete' client.client_id %}')">
+                      <img src="{% static 'icons/tables/delete.svg' %}" alt="удалить">
+                  </button>
+                </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+        <div class="btns">
+          <div class="back-exit-btns">
+            <a href="{% url 'home' %}" class="btn back">Назад</a>
+            <a href="{% url 'logout' %}" class="btn exit">Выход</a>
+          </div>
+          <div class="nav-btns">
+              <a href="{% url 'client_add' %}" class="btn add-btn">Добавить</a>
+
+              {% if page_obj.has_previous %}
+                  <a href="?page={{ page_obj.previous_page_number }}" class="btn prev-btn">
+                    <img src="../../static/icons/tables/chevron_left.svg" alt="пред">
+                  </a>
+              {% else %}
+                  <span class="btn prev-btn disabled">
+                    <img src="../../static/icons/tables/chevron_left.svg" alt="пред">
+                  </span>
+              {% endif %}
+
+              <span class="page-info">Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}" class="btn next-btn">
+                    <img src="../../static/icons/tables/chevron_right.svg" alt="след.">
+                  </a>
+              {% else %}
+                  <span class="btn next-btn disabled">
+                    <img src="../../static/icons/tables/chevron_right.svg" alt="след.">
+                  </span>
+              {% endif %}
+
+              <a href="#" class="btn search">
+                <img src="../../static/icons/tables/search.svg" alt="Поиск">
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="deletePopup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Подтвердите удаление</h3>
+            <p id="popupMessage">Вы уверены, что хотите удалить клиента <strong id="clientNamePopup"></strong>?</p>
+            <div class="popup-buttons">
+                <button id="confirmDelete" class="btn delete-btn">Удалить</button>
+                <button id="cancelDelete" class="btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+    <script src="../../static/scripts/delete-popup.js"></script>
+    <script src="../../static/scripts/delete-on-click.js"></script>
+</body>
+</html>

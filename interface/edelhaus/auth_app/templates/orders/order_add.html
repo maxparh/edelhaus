@@ -1,0 +1,97 @@
+<!-- templates/orders/order_add.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить заказ — EdelHaus</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tables.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/forms.css' %}">
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+
+    <div class="form-container">
+        <div class="back-container">
+            <a href="{% url 'orders' %}" class="back-link">← Назад к списку заказов</a>
+        </div>
+        <div class="form">
+            <h2>Добавить новый заказ</h2>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Клиент -->
+                <div class="form-group">
+                    <label for="client_id">Клиент</label>
+                    <select id="client_id" name="client_id">
+                        <option value="">— Не выбран —</option>
+                        {% for client in clients %}
+                            <option value="{{ client.client_id }}" {% if client_id == client.client_id|stringformat:"i" %}selected{% endif %}>
+                                {{ client.client_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Дата -->
+                <div class="form-group">
+                    <label for="order_date">Дата заказа <span class="important-span">*</span></label>
+                    <input type="date" id="order_date" name="order_date" value="{{ order_date }}" required>
+                </div>
+
+                <!-- Статус -->
+                <div class="form-group">
+                    <label for="order_status">Статус <span class="important-span">*</span></label>
+                    <select id="order_status" name="order_status" required>
+                        <option value="">— Выберите статус —</option>
+                        <option value="Принят" {% if order_status == "Принят" %}selected{% endif %}>Принят</option>
+                        <option value="В обработке" {% if order_status == "В обработке" %}selected{% endif %}>В обработке</option>
+                        <option value="Выполняется" {% if order_status == "Выполняется" %}selected{% endif %}>Выполняется</option>
+                        <option value="Выполнен" {% if order_status == "Выполнен" %}selected{% endif %}>Выполнен</option>
+                    </select>
+                </div>
+
+                <!-- Компания доставки -->
+                <div class="form-group">
+                    <label for="delivery_company">Компания доставки</label>
+                    <input type="text" id="delivery_company" name="delivery_company" value="{{ delivery_company }}">
+                </div>
+
+                <!-- ТОВАРЫ -->
+                <h3 class="section-title">Товары в заказе</h3>
+                <div id="orderItems" class="order-items-container">
+                    <div class="order-item-row">
+                        <select name="product_id[]" required class="product-select" data-price="0">
+                            <option value="">— Выберите товар —</option>
+                            {% for product in products %}
+                                <option value="{{ product.product_id }}" data-price="{{ product.product_price|default:0 }}">
+                                    {{ product.product_name }}
+                                    {% if product.product_color %} [цвет: {{ product.product_color }}]{% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <input type="number" name="quantity[]" value="1" min="1" required class="quantity-input">
+                        <button type="button" class="btn-remove-item">×</button>
+                    </div>
+                </div>
+
+                <button type="button" id="addItemBtn" class="btn-form-like">+ Добавить товар</button>
+                <!-- Поле суммы (только для отображения, не отправляется на сервер) -->
+                <div class="form-group" style="margin-top: 24px;">
+                    <label for="totalDisplay">Сумма заказа</label>
+                    <input type="text" id="totalDisplay" readonly>
+                    <input type="hidden" id="order_total" name="order_total" value="">
+                </div>
+                
+                <div class="submit-container">
+                    <button type="submit" class="btn-form">Создать заказ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'scripts/item-row.js' %}"></script>
+</body>
+</html>

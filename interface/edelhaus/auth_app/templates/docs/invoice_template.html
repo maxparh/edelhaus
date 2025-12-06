@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Накладная №{{ invoice.invoice_number }}</title>
+    {% load custom_filters %}
+    <style>
+        body {
+            font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif;
+            margin: 15mm; /* ← уменьшено с 20mm до 15mm */
+            font-size: 9.5pt;
+            line-height: 1.4;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            min-height: 240mm;
+        }
+
+        .header {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 13pt;
+        }
+
+        .section {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            border: 1px solid black;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px;
+            text-align: left;
+            min-height: 22px;
+            font-size: 9pt;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .total-row td {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .totals-block {
+            text-align: right;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 9.5pt;
+        }
+
+        .signature-container {
+            display: flex;
+            height: 100%;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            margin-top: auto;
+        }
+
+        .signature-column {
+            width: 45%;
+        }
+
+        .signature-line {
+            margin-bottom: 12px;
+        }
+
+        .signature-label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: normal;
+        }
+
+        .signature-underline {
+            display: block;
+            border-bottom: 1px solid black;
+            height: 1em;
+            margin-top: 4px;
+        }
+
+        .right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">НАКЛАДНАЯ №{{ invoice.invoice_number }}</div>
+
+<div class="right">
+    от «{{ invoice.created_at|date:"d" }}» 
+    {% if invoice.created_at|date:"m" == "01" %}Января{% endif %}
+    {% if invoice.created_at|date:"m" == "02" %}Февраля{% endif %}
+    {% if invoice.created_at|date:"m" == "03" %}Марта{% endif %}
+    {% if invoice.created_at|date:"m" == "04" %}Апреля{% endif %}
+    {% if invoice.created_at|date:"m" == "05" %}Мая{% endif %}
+    {% if invoice.created_at|date:"m" == "06" %}Июня{% endif %}
+    {% if invoice.created_at|date:"m" == "07" %}Июля{% endif %}
+    {% if invoice.created_at|date:"m" == "08" %}Августа{% endif %}
+    {% if invoice.created_at|date:"m" == "09" %}Сентября{% endif %}
+    {% if invoice.created_at|date:"m" == "10" %}Октября{% endif %}
+    {% if invoice.created_at|date:"m" == "11" %}Ноября{% endif %}
+    {% if invoice.created_at|date:"m" == "12" %}Декабря{% endif %}
+    {{ invoice.created_at|date:"Y" }} г.
+</div>
+
+<div class="section">
+    <strong>Продавец:</strong> ТД "EdelHaus"<br>
+    <strong>Адрес:</strong> Санкт-Петербург, Галерный пр-кт, д.1, к1, стр 2
+</div>
+
+<div class="section">
+    <strong>Покупатель:</strong> {{ order.client.client_name|default:"—" }}<br>
+    <strong>Адрес покупателя:</strong> {{ order.client.client_address|default:"—" }}
+</div>
+
+<div class="section">
+    <strong>Основание:</strong> Заказ №{{ order.order_id }}
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Наименование товара</th>
+            <th>Цвет</th>
+            <th>Ед. изм.</th>
+            <th>Цена</th>
+            <th>Кол-во</th>
+            <th>Сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.color|default:"—" }}</td>
+            <td>шт</td>
+            <td>{{ item.price|format_currency }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.total|format_currency }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" style="text-align: center;">Товары отсутствуют</td></tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="total-row">
+            <td colspan="6">Итого:</td>
+            <td>{{ order_total|format_currency }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="totals-block">
+    Всего наименований {{ items|length }}, на сумму {{ order_total|format_currency }}<br>
+    {% if nds_amount %}
+        в том числе НДС 18%: {{ nds_amount|format_currency }}
+    {% endif %}
+</div>
+
+<div class="signature-container">
+    <div class="signature-column">
+        <div class="signature-line">
+            <span class="signature-label">Продавец, подпись (ФИО)</span>
+            <span class="signature-underline">&nbsp;</span>
+        </div>
+        <div class="signature-line">
+            <span class="signature-label">Сотрудник, подпись (ФИО)</span>
+            <span class="signature-underline">&nbsp;</span>
+        </div>
+    </div>
+    <div class="signature-column">
+        <div class="signature-line">
+            <span class="signature-label">Покупатель, подпись (ФИО)</span>
+            <span class="signature-underline">&nbsp;</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

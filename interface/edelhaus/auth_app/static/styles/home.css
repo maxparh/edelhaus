@@ -1,0 +1,55 @@
+h2{
+    margin-bottom: 32px;
+}
+
+.main-panel {
+    background-color: #f5f0e6;
+    margin: 40px auto;
+    padding: 30px;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.menu-btn {
+    display: block;
+    padding: 10px;
+    background-color: #d6c7b5;
+    color: #000;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.menu-btn:hover {
+    background-color: #c2b3a0;
+}
+
+.back-exit-btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top:32px;
+}
+
+.back{
+    width: 40%;
+}
+
+.exit {
+    background-color: #e57373;
+    color: white;
+    width: 40%;
+}
+
+.exit:hover {
+    background-color: #d32f2f;
+}

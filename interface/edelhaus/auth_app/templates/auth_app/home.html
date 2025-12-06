@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>EdelHaus — Главная</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+    <div class="main-content">
+        <div class="main-panel">
+        <h2>Разделы</h2>
+        <div class="menu-buttons">
+            <a href="{% url 'documents' %}" class="menu-btn">Документы</a>
+            <a href="{% url 'orders' %}" class="menu-btn">Заказы</a>
+            <a href="{% url 'clients' %}" class="menu-btn">Клиенты</a>
+            <a href="{% url 'products' %}" class="menu-btn">Товары</a>
+            <a href="{% url 'suppliers' %}" class="menu-btn">Поставщики</a>
+            <div class="back-exit-btns">
+                <a href="{% url 'logout' %}" class="menu-btn exit">Выход</a>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

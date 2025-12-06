@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить товар — EdelHaus</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tables.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/forms.css' %}">
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+
+    <div class="form-container">
+        <div class="back-container">
+            <a href="{% url 'products' %}" class="back-link">← Назад к списку товаров</a>
+        </div>
+        <div class="form">
+            <h2>Добавить новый товар</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="product_name">Название товара <span class="important-span">*</span></label>
+                    <input type="text" id="product_name" name="product_name" value="{{ product_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product_price">Цена (руб.) <span class="important-span">*</span></label>
+                    <input type="number" step="0.01" id="product_price" name="product_price" value="{{ product_price }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product_material">Материал</label>
+                    <input type="text" id="product_material" name="product_material" value="{{ product_material }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="supplier_id">Поставщик</label>
+                    <select id="supplier_id" name="supplier_id">
+                        <option value="">-- Без поставщика --</option>
+                        {% for s in suppliers %}
+                            <option value="{{ s.supplier_id }}" {% if supplier_id == s.supplier_id|stringformat:"s" %}selected{% endif %}>
+                                {{ s.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="product_weight">Вес (кг)</label>
+                    <input type="number" step="0.001" id="product_weight" name="product_weight" value="{{ product_weight }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="product_color">Цвет</label>
+                    <input type="text" id="product_color" name="product_color" value="{{ product_color }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="date_added">Дата добавления</label>
+                    <input type="date" id="date_added" name="date_added" value="{{ date_added }}">
+                </div>
+
+                <button type="submit" class="btn-form">Добавить товар</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

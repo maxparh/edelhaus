@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить поставщика — EdelHaus</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tables.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/forms.css' %}">
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+
+    <div class="form-container">
+        <div class="back-container">
+            <a href="{% url 'suppliers' %}" class="back-link">← Назад к списку поставщиков</a>
+        </div>
+        <div class="form">
+            <h2>Добавить нового поставщика</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Наименование поставщика <span class="important-span">*</span></label>
+                    <input type="text" id="name" name="name" value="{{ name }}" required>
+                </div>
+
+                <button type="submit" class="btn-form">Добавить поставщика</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

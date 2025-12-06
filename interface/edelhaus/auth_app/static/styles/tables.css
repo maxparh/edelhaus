@@ -1,0 +1,251 @@
+.table-panel {
+    background-color: #f5f0e6;
+    margin: 40px 240px;
+    padding: 60px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.table-name{
+    font-size: 32px;
+}
+/* Стили таблицы */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    border: none; 
+    font-size: 1rem; 
+}
+
+table th,
+table td {
+    padding: 1rem;
+    text-align: left;
+    border: none; 
+    word-wrap: break-word;
+}
+
+table th {
+    font-weight: 600;
+    color: #555;
+    background-color: transparent;
+    border-bottom: 2px solid #ddd; /* Линия под заголовками остаётся */
+}
+
+table tbody tr:hover {
+    background-color: inherit;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: inherit; 
+}
+
+table td {
+    background-color: inherit; /* ← Принимает цвет родителя (фон панели) */
+}
+
+table th:first-child,
+table td:first-child {
+    width: 20px; /* или другое значение */
+    min-width: 20px;
+    max-width: 100px;
+    word-wrap: break-word;
+}
+
+/* Опционально: если хотите, чтобы остальные столбцы занимали оставшееся пространство */
+table th:not(:first-child),
+table td:not(:first-child) {
+    width: auto;
+}
+
+table td:nth-child(6){
+    max-width: 80px;
+}
+
+table td:nth-child(3) {
+    max-width: 400px;          /* Максимальная ширина столбца */    /* Не разрывать слова (особенно важно для кириллицы) */ /* Но разрешить перенос всего слова на новую строку, если не помещается */
+    hyphens: manual;         /* Запрещаем перенос строк */
+}
+
+table td:nth-child(5) {
+    max-width: 300px;          /* Максимальная ширина столбца */
+    word-break: keep-all;     /* Не разрывать слова (особенно важно для кириллицы) */
+    overflow-wrap: break-word; /* Но разрешить перенос всего слова на новую строку, если не помещается */
+    hyphens: manual;         /* Запрещаем перенос строк */
+}
+
+table td:nth-child(7) {
+    max-width: 300px;          /* Максимальная ширина столбца */
+    word-break: keep-all;     /* Не разрывать слова (особенно важно для кириллицы) */
+    overflow-wrap: break-word; /* Но разрешить перенос всего слова на новую строку, если не помещается */
+    hyphens: manual;         /* Запрещаем перенос строк */
+}
+
+
+
+.btns{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #d6c7b5;
+    color: #000;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: inherit; 
+    line-height: 1;
+}
+
+.btn:hover {
+    background-color: #c2b3a0;
+}
+
+.delete-edit-btns{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete{
+    width: 44px;
+}
+
+.edit{
+    width: 44px;
+    height: 44px;
+    padding: 0;
+}
+
+.back-exit-btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top:32px;
+    gap: 32px;
+}
+
+.back{
+    width: 120px;
+    height: 44px;
+    padding: 0;
+}
+
+.exit {
+    background-color: #e57373;
+    color: white;
+    width: 120px;
+    height: 44px;
+    padding: 0;
+}
+
+.exit:hover {
+    background-color: #d32f2f;
+}
+
+.nav-btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top:32px;
+    padding-right: 16px;
+    gap: 32px;
+}
+
+.add-btn{
+    width: 120px;
+}
+
+.next-btn{
+    width: 44px;
+    height: 44px;
+    padding: 0;
+}
+
+.page-info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.prev-btn{
+    width: 44px;
+    height: 44px;
+    padding: 0;
+}
+
+.search{
+    width: 44px;
+    height: 44px;
+    padding: 0;
+}
+
+.messages-container {
+    margin-bottom: 16px;
+}
+.message-success {
+    color: #28a745;
+    font-weight: bold;
+}
+.message-error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Стили ТОЛЬКО для таблицы заказов */
+.orders-table th:nth-child(7),
+.orders-table th:nth-child(8),
+.orders-table th:nth-child(9),
+.orders-table td:nth-child(7),
+.orders-table td:nth-child(8),
+.orders-table td:nth-child(9) {
+    width: 44px;
+    min-width: 44px;
+    max-width: 44px;
+    padding: 16 !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Кнопки в таблице заказов — без padding, фиксированный размер */
+.orders-table .btn.edit,
+.orders-table .btn.delete,
+.orders-table .btn.view {
+    width: 44px;
+    height: 44px;
+    padding: 0 !important;
+    margin: 16;
+    background-color: #d6c7b5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.orders-table .btn.edit:hover,
+.orders-table .btn.delete:hover,
+.orders-table .btn.view:hover {
+    background-color: #c2b3a0;
+}

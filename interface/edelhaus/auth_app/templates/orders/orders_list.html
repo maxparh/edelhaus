@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>EdelHaus — Список заказов</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tables.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/delete-popup.css' %}">
+    {% load custom_filters %}
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+
+    <div class="table-content">
+        <div class="table-panel">
+        {% csrf_token %}
+        <h2 class="table-name">Заказы</h2>        
+        <div class="table-container">
+          <table border="1" cellpadding="6" cellspacing="0" class="orders-table">
+            <tr>
+              <th>Номер заказа</th>
+              <th>Клиент</th>
+              <th>Компания доставки</th>
+              <th>Статус</th>
+              <th>Дата</th>
+              <th>Сумма</th>
+              <th></th> <!-- Редактировать -->
+              <th></th> <!-- Состав -->
+              <th></th> <!-- Удалить -->
+            </tr>
+            {% for order in page_obj %}
+            <tr>
+              <td>{{ order.order_id }}</td>
+              <td>{{ order.client.client_name|default:"—" }}</td> 
+              <td>{{ order.delivery_company|default:"—" }}</td>
+              <td>{{ order.order_status|default:"—" }}</td>
+              <td>{{ order.order_date|date:"d.m.Y"|default:"—" }}</td>
+              <td>{{ order.order_total|format_currency|default:"—" }}</td>
+
+              <!-- Редактировать -->
+              <td>
+                <a href="{% url 'order_edit' order.order_id %}" class="btn edit">
+                  <img src="{% static 'icons/tables/edit.svg' %}" alt="редактировать">
+                </a>
+              </td>
+
+              <!-- Посмотреть состав -->
+               <td>
+              <button type="button" class="btn view" 
+                      onclick="showOrderItems({{ order.order_id }})">
+                  <img src="{% static 'icons/tables/list.svg' %}" alt="состав">
+              </button>
+              </td>
+
+              <!-- Удалить -->
+              <td>
+                <button type="button" class="btn delete"
+                        onclick="openDeletePopup({{ order.order_id }}, 'заказ №{{ order.order_id }}', '{% url 'order_delete' order.order_id %}')">
+                  <img src="{% static 'icons/tables/delete.svg' %}" alt="удалить">
+                </button>
+              </td>
+            </tr>
+            
+            {% empty %}
+            <tr>
+              <td colspan="8" style="text-align: center;">Нет заказов</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+        <div class="btns">
+          <div class="back-exit-btns">
+            <a href="{% url 'home' %}" class="btn back">Назад</a>
+            <a href="{% url 'logout' %}" class="btn exit">Выход</a>
+          </div>
+          <div class="nav-btns">
+            <a href="{% url 'order_add' %}" class="btn add-btn">Добавить</a>
+
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}" class="btn prev-btn">
+                <img src="{% static 'icons/tables/chevron_left.svg' %}" alt="пред">
+              </a>
+            {% else %}
+              <span class="btn prev-btn disabled">
+                <img src="{% static 'icons/tables/chevron_left.svg' %}" alt="пред">
+              </span>
+            {% endif %}
+
+            <span class="page-info">Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}" class="btn next-btn">
+                <img src="{% static 'icons/tables/chevron_right.svg' %}" alt="след.">
+              </a>
+            {% else %}
+              <span class="btn next-btn disabled">
+                <img src="{% static 'icons/tables/chevron_right.svg' %}" alt="след.">
+              </span>
+            {% endif %}
+
+            <a href="#" class="btn search">
+              <img src="{% static 'icons/tables/search.svg' %}" alt="Поиск">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Popup -->
+    <div id="deletePopup" class="popup-overlay">
+      <div class="popup-content">
+        <h3>Подтвердите удаление</h3>
+        <p id="popupMessage">Вы уверены, что хотите удалить <strong id="clientNamePopup"></strong>?</p>
+        <div class="popup-buttons">
+          <button id="confirmDelete" class="btn delete-btn">Удалить</button>
+          <button id="cancelDelete" class="btn">Отмена</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Popup -->
+    <div id="searchPopup" class="popup-overlay" style="display: none;">
+      <div class="popup-content">
+        <h3>Поиск заказа</h3>
+        <input type="text" id="searchOrderId" placeholder="Введите номер заказа" autofocus>
+        <div class="popup-buttons">
+          <button id="applySearch" class="btn">Найти</button>
+          <button id="cancelSearch" class="btn">Отмена</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'scripts/delete-popup.js' %}"></script>
+    <script src="{% static 'scripts/delete-on-click.js' %}"></script>
+    <script src="{% static 'scripts/search-orders.js' %}"></script>
+    <script src="{% static 'scripts/list-popup.js' %}"></script>
+</body>
+</html>

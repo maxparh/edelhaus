@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить клиента — EdelHaus</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tables.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/forms.css' %}">
+</head>
+<body>
+    <div class="header">EdelHaus</div>
+
+    <div class="form-container">
+        <div class="back-container">
+            <a href="{% url 'clients' %}" class="back-link">← Назад к списку клиентов</a>
+        </div>
+        <div class="form">
+            <h2>Добавить нового клиента</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="client_name">Имя клиента <span class="important-span">*</span></label>
+                    <input type="text" id="client_name" name="client_name" value="{{ client_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="client_phone">Телефон</label>
+                    <input type="text" id="client_phone" name="client_phone" value="{{ client_phone }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="client_email">Email</label>
+                    <input type="email" id="client_email" name="client_email" value="{{ client_email }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="client_address">Адрес</label>
+                    <input type="text" id="client_address" name="client_address" value="{{ client_address }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="loyalty_lvl">Уровень лояльности <span class="important-span">*</span></label>
+                    <select id="loyalty_lvl" name="loyalty_lvl">
+                        <option value="">-- Выберите уровень --</option>
+                        <option value="Стандартный" {% if loyalty_lvl == "Стандартный" %}selected{% endif %}>Стандартный</option>
+                        <option value="Премиум" {% if loyalty_lvl == "Премиум" %}selected{% endif %}>Премиум</option>
+                        <option value="Платинум" {% if loyalty_lvl == "Платинум" %}selected{% endif %}>Платинум</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="registration_date">Дата регистрации <span class="important-span">*</span></label>
+                    <input type="date" id="registration_date" name="registration_date" value="{{ registration_date }}">
+                </div>
+                <div class="submit-container">
+                    <button type="submit" class="btn-form">Добавить клиента</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
